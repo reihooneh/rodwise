@@ -1,0 +1,96 @@
+<!--{"title": "Protect it · Rodwise", "description": "Find the fewest, cheapest air terminals that leave nothing on a building for the rolling sphere to touch, and see how many strikes still get past.", "nav": "protect", "script": "protect.js"}-->
+<section class="wrap section-tight">
+  <p class="kicker">Protect it</p>
+  <h1>The cheapest set of air terminals</h1>
+  <p class="lede">Air terminals (lightning rods) give the sphere something taller to rest on, lifting it clear of the roof. Rodwise tries rods of three lengths at places across the roof, ridges and fittings, and keeps the set that protects everything for the least money.</p>
+</section>
+
+<div class="wrap workbench">
+  <form class="panel" id="form" novalidate>
+    <fieldset>
+      <legend>Building</legend>
+      <div class="field">
+        <label for="example">Building</label>
+        <select id="example">
+          <option value="house">Two-storey house</option>
+          <option value="farm">Farmhouse and a gum tree</option>
+          <option value="church">Church with a steeple</option>
+          <option value="flats">Apartment block</option>
+          <option value="mine" disabled>My building (from the last page)</option>
+        </select>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Protection level</legend>
+      <div class="levels" id="levels" role="group" aria-label="Protection level">
+        <button type="button" data-level="I" aria-pressed="false"><strong>I</strong>20 m</button>
+        <button type="button" data-level="II" aria-pressed="false"><strong>II</strong>30 m</button>
+        <button type="button" data-level="III" aria-pressed="true"><strong>III</strong>45 m</button>
+        <button type="button" data-level="IV" aria-pressed="false"><strong>IV</strong>60 m</button>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Air terminals on offer</legend>
+      <p class="hint small muted">Installed cost of each, with its share of down conductor and earthing. Your installer's prices will differ.</p>
+      <div class="field-row">
+        <div class="field"><label for="l0">Short (m)</label><input type="number" id="l0" min="0.2" max="10" step="0.1" value="0.6"></div>
+        <div class="field"><label for="c0">Cost ($)</label><input type="number" id="c0" min="1" max="1000000" step="10" value="450"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="l1">Medium (m)</label><input type="number" id="l1" min="0.2" max="10" step="0.1" value="1.5"></div>
+        <div class="field"><label for="c1">Cost ($)</label><input type="number" id="c1" min="1" max="1000000" step="10" value="650"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="l2">Mast (m)</label><input type="number" id="l2" min="0.2" max="10" step="0.1" value="3"></div>
+        <div class="field"><label for="c2">Cost ($)</label><input type="number" id="c2" min="1" max="1000000" step="10" value="1100"></div>
+      </div>
+      <div class="slider-row">
+        <label for="spacing">Try a place every</label>
+        <output id="spacing-out" for="spacing">2 m</output>
+        <input type="range" id="spacing" min="1" max="4" step="0.5" value="2">
+      </div>
+    </fieldset>
+    <button type="submit" class="primary run" id="run">Plan the air terminals</button>
+    <p class="status" id="status" role="status"></p>
+    <p class="error" id="error" role="alert"></p>
+  </form>
+
+  <section class="results" id="out" aria-live="polite">
+    <p class="headline" id="headline">Choose a building and press the button.</p>
+    <div class="stage" id="stage">
+      <div class="stage-fallback" id="fallback" hidden>3D needs WebGL, which this browser has turned off. The plan view below shows the same results from above.</div>
+    </div>
+    <div class="stage-tools">
+      <button type="button" id="play" aria-pressed="true">Pause</button>
+      <button type="button" id="sphere" aria-pressed="false">Roll the sphere</button>
+      <span class="spacer"></span>
+      <span class="legend">
+        <span><i class="swatch rod"></i>Air terminal</span>
+        <span><i class="swatch hit"></i>Can be struck</span>
+        <span><i class="swatch cover"></i>Protected</span>
+      </span>
+    </div>
+    <div class="compare" id="compare">
+      <div class="fact"><div class="k">Roof and fittings the sphere touches, before</div><div class="v hit" id="f-before">–</div></div>
+      <div class="fact"><div class="k">After</div><div class="v ok" id="f-after">–</div></div>
+      <div class="fact"><div class="k">Strikes reaching roof or fittings per century, before</div><div class="v hit" id="f-sbefore">–</div></div>
+      <div class="fact"><div class="k">After (the rest go to the rods)</div><div class="v ok" id="f-safter">–</div></div>
+    </div>
+    <p class="note" id="slip"></p>
+    <div class="section-tight">
+      <h3>The plan</h3>
+      <ul class="rodlist" id="rods"><li class="detail">No plan yet.</li></ul>
+    </div>
+    <div class="planbox section-tight">
+      <h3>From above, with the rods</h3>
+      <canvas id="plan" role="img" aria-label="Plan view"></canvas>
+      <div class="legend">
+        <span><i class="swatch rod"></i>Air terminal</span>
+        <span><i class="swatch hit"></i>Can be struck</span>
+        <span><i class="swatch cover"></i>Protected (darker: deeper)</span>
+        <span><i class="swatch strike"></i>Strikes</span>
+      </div>
+    </div>
+    <div class="note section-tight"><strong>Rods are one part of a system.</strong> Each needs a down conductor to an earth electrode, and metal on the roof (the TV antenna, solar frames, the tank) bonded to it, so a strike has one safe path to ground. AS/NZS 1768 covers all of it; ask a lightning protection installer.</div>
+  </section>
+</div>
