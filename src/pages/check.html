@@ -1,0 +1,97 @@
+<!--{"title": "Where it strikes · Rodwise", "description": "Roll the protection sphere over a building and simulate thousands of lightning strikes to see which parts can be struck and how often.", "nav": "check", "script": "check.js"}-->
+<section class="wrap section-tight">
+  <p class="kicker">Where it strikes</p>
+  <h1>Which parts of the building can lightning reach?</h1>
+  <p class="lede">Choose a building and a protection level. Rodwise rolls the sphere over every part of it, then sends 60,000 simulated lightning leaders down to see where they land. Everything runs on this device.</p>
+</section>
+
+<div class="wrap workbench">
+  <form class="panel" id="form" novalidate>
+    <fieldset>
+      <legend>Building</legend>
+      <div class="field">
+        <label for="example">Example</label>
+        <select id="example">
+          <option value="house">Two-storey house</option>
+          <option value="farm">Farmhouse and a gum tree</option>
+          <option value="church">Church with a steeple</option>
+          <option value="flats">Apartment block</option>
+          <option value="mine" disabled>My building (load one below)</option>
+        </select>
+      </div>
+      <div class="drop" id="drop">
+        <label for="file">Or load your own: a JSON list of boxes, roofs, tanks, trees and poles, up to 64 KB.</label>
+        <input type="file" id="file" accept=".json,application/json">
+        <p class="small muted"><a href="assets/examples/house.json" download="rodwise-house.json">Download the example house</a> to use as a template.</p>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Protection level</legend>
+      <div class="levels" id="levels" role="group" aria-label="Protection level">
+        <button type="button" data-level="I" aria-pressed="false"><strong>I</strong>20 m</button>
+        <button type="button" data-level="II" aria-pressed="false"><strong>II</strong>30 m</button>
+        <button type="button" data-level="III" aria-pressed="true"><strong>III</strong>45 m</button>
+        <button type="button" data-level="IV" aria-pressed="false"><strong>IV</strong>60 m</button>
+      </div>
+      <p class="hint small muted" id="level-use"></p>
+    </fieldset>
+    <fieldset>
+      <legend>Lightning where you are</legend>
+      <div class="slider-row">
+        <label for="td">Thunder days a year</label>
+        <output id="td-out" for="td">25</output>
+        <input type="range" id="td" min="1" max="80" step="1" value="25">
+      </div>
+      <p class="hint small muted" id="ng-note"></p>
+    </fieldset>
+    <button type="submit" class="primary run" id="run">Find where it strikes</button>
+    <p class="status" id="status" role="status"></p>
+    <p class="error" id="error" role="alert"></p>
+  </form>
+
+  <section class="results" id="out" aria-live="polite">
+    <p class="headline" id="headline">Choose a building and press the button.</p>
+    <div class="stage" id="stage">
+      <div class="stage-fallback" id="fallback" hidden>3D needs WebGL, which this browser has turned off. The plan view below shows the same results from above.</div>
+    </div>
+    <div class="stage-tools">
+      <button type="button" id="play" aria-pressed="true">Pause</button>
+      <button type="button" id="sphere" aria-pressed="false">Roll the sphere</button>
+      <span class="spacer"></span>
+      <span class="legend">
+        <span><i class="swatch hit"></i>Can be struck</span>
+        <span><i class="swatch cover"></i>Under the sphere</span>
+        <span><i class="swatch strike"></i>Strike</span>
+      </span>
+    </div>
+    <div class="tiles section-tight">
+      <div class="tile"><div class="num hot" id="t-century">–</div><div class="what">strikes to the building and fittings per century</div></div>
+      <div class="tile"><div class="num" id="t-years">–</div><div class="what">between strikes, on average</div></div>
+      <div class="tile"><div class="num" id="t-exposed">–</div><div class="what">of roof and fittings the sphere can touch</div></div>
+      <div class="tile"><div class="num cool" id="t-elsewhere">–</div><div class="what">of nearby strikes taken by trees and existing terminals</div></div>
+    </div>
+    <div class="warning" id="tall" hidden></div>
+    <div class="section-tight table-box">
+      <table>
+        <caption class="sr">Each part of the building</caption>
+        <thead><tr><th scope="col">Part</th><th scope="col" class="hide-sm">What it is</th><th scope="col" class="num">Strikes per century</th><th scope="col" class="num">Reachable</th></tr></thead>
+        <tbody id="parts"></tbody>
+      </table>
+    </div>
+    <div class="planbox section-tight">
+      <h3>From above</h3>
+      <p class="muted small">Every half-metre cell of the model. White marks where the simulated strikes landed: the brighter, the more often.</p>
+      <canvas id="plan" role="img" aria-label="Plan view"></canvas>
+      <div class="legend">
+        <span><i class="swatch hit"></i>Can be struck</span>
+        <span><i class="swatch cover"></i>Under the sphere (darker: deeper)</span>
+        <span><i class="swatch tree"></i>Tree</span>
+        <span><i class="swatch rod"></i>Air terminal</span>
+        <span><i class="swatch strike"></i>Strikes</span>
+      </div>
+    </div>
+    <div class="buttons section-tight">
+      <a class="button primary" href="protect.html" id="to-protect">Plan the air terminals</a>
+    </div>
+  </section>
+</div>
