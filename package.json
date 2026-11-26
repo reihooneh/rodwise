@@ -1,0 +1,20 @@
+{
+  "name": "rodwise",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shows where lightning would strike a building and plans the cheapest air terminals to protect it: the rolling sphere of AS/NZS 1768 and IEC 62305 as an exact morphological closing, and the electrogeometric model behind it, in C compiled to WebAssembly with a 3D site",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "make -B wasm && node scripts/build.mjs",
+    "test:core": "make test-core",
+    "test": "node --test --test-concurrency=1 tests/engine/*.test.mjs tests/web/*.test.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "@fontsource-variable/newsreader": "5.3.0",
+    "@fontsource-variable/space-grotesk": "5.3.0",
+    "playwright": "1.63.0",
+    "three": "0.170.0"
+  }
+}
