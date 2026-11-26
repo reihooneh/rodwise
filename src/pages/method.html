@@ -1,0 +1,100 @@
+<!--{"title": "How it works · Rodwise", "description": "The rolling sphere as a morphological closing, the electrogeometric model behind it, how the air terminals are chosen, and how it is all tested.", "nav": "method", "script": "method.js"}-->
+<section class="wrap section-tight">
+  <p class="kicker">How it works</p>
+  <h1>A sphere, a grid and sixty thousand lightning strikes</h1>
+  <p class="lede">The rolling sphere is how lightning protection standards around the world decide what a building's air terminals must cover. This page explains why the method works, how Rodwise computes it exactly, and how the answers are checked.</p>
+</section>
+
+<div class="wrap section-tight">
+  <figure class="figure chart-box">
+    <h3>Roll the sphere yourself</h3>
+    <p class="muted">A cross-section through a house. Move the sphere across, change its size or add a rod on the ridge. Coral is roof the sphere touches; the blue band is the space it can't reach.</p>
+    <svg class="diagram profile" id="profile" viewBox="0 0 800 340" role="img" aria-label="A sphere rolling over a cross-section of a house"></svg>
+    <div class="grid-3">
+      <div class="slider-row">
+        <label for="p-pos">Sphere position</label>
+        <output id="p-pos-out" for="p-pos">0%</output>
+        <input type="range" id="p-pos" min="0" max="100" step="1" value="30">
+      </div>
+      <div class="slider-row">
+        <label for="p-rod">Rod on the ridge</label>
+        <output id="p-rod-out" for="p-rod">none</output>
+        <input type="range" id="p-rod" min="0" max="4" step="0.1" value="0">
+      </div>
+      <div class="field">
+        <label for="p-r">Protection level</label>
+        <select id="p-r">
+          <option value="20">I: 20 m sphere</option>
+          <option value="30">II: 30 m sphere</option>
+          <option value="45" selected>III: 45 m sphere</option>
+          <option value="60">IV: 60 m sphere</option>
+        </select>
+      </div>
+    </div>
+    <figcaption id="p-caption"></figcaption>
+  </figure>
+</div>
+
+<article class="wrap prose">
+  <h2>Why a sphere?</h2>
+  <p>A lightning flash starts as a faint channel, the leader, stepping down from the cloud. When its tip comes within a certain distance of something on the ground, that thing launches a spark up to meet it, and the strike happens there. That distance, the striking distance, grows with the strike's peak current <span class="formula-inline"><code>I</code></span>:</p>
+  <code class="formula">r = 10 · I^0.65  metres,  I in kA          (IEC 62305-1)</code>
+  <p>So whatever is first within <code>r</code> of the tip as it comes down takes the strike. Picture every possible tip position as the centre of a sphere of radius <code>r</code>. Then the places that can be struck are exactly those a sphere of that radius can touch as it rolls over and around everything. Points under the sphere's path are never the first thing a leader of that current meets.</p>
+  <p>A weaker strike has a smaller sphere that can reach further down between rods. So a standard picks the sphere for the weakest current it is willing to let through. Level I uses a 20 m sphere and stops everything from 3 kA up, which is 99% of strikes. Level IV uses a 60 m sphere and stops 16 kA and up, 84% of strikes.</p>
+  <div class="figure pair">
+    <figure class="chart-box">
+      <figcaption>How strong strikes are: the share of first strokes at least this strong</figcaption>
+      <svg class="chart" id="c-current" viewBox="0 0 420 260" role="img" aria-label="Share of strokes above each peak current"></svg>
+    </figure>
+    <figure class="chart-box">
+      <figcaption>Striking distance (sphere radius) for each peak current</figcaption>
+      <svg class="chart" id="c-distance" viewBox="0 0 420 260" role="img" aria-label="Striking distance against peak current"></svg>
+    </figure>
+  </div>
+  <p>Rodwise uses a lognormal current distribution with a median of 55.8 kA and σ = 1.257 (natural log). It was fitted so that the shares above 3, 5, 10 and 16 kA come out at 99, 97, 91 and 84%: the four interception rates the standard gives for its levels. The tests check all four.</p>
+
+  <h2>From rolling to an exact calculation</h2>
+  <p>Rodwise turns the building into a height field: a grid of half-metre cells, each with the height of whatever stands there. A cell takes the highest point of anything overlapping it, so nothing thin, a parapet or a ridge, falls between the grid points. A sphere of radius <code>R</code> centred over cell <code>c</code> can sit no lower than</p>
+  <code class="formula">centre(c) = max( R,  max over cells s within R of  h(s) + √(R² − |c − s|²) )</code>
+  <p>where the <code>R</code> on its own is the ground. In image processing this is a grey-scale dilation by a ball. The lowest the underside of the sphere can then reach over a cell <code>p</code> is</p>
+  <code class="formula">under(p) = min over c within R of  centre(c) − √(R² − |c − p|²)   ≥   h(p)</code>
+  <p>which is the closing. If <code>under(p) = h(p)</code>, some resting place of the sphere touches <code>p</code>: lightning can strike there. If it's higher, <code>p</code> is protected, and the difference is how far below the sphere it sits. There's no sampling of sphere positions and no tolerance to tune: within the grid, this is the rolling sphere exactly.</p>
+  <p>Two tests hold the code to geometry worked out by hand. A rod of length <code>L</code> on a big flat roof protects a disc of radius <code>√(L(2R − L))</code>: every cell must fall on the correct side of that circle, at three sphere sizes. A sphere resting on two long walls <code>2d</code> apart sags to <code>h + √(R² − d²) − R</code>: a box just below that is protected, and just above it is struck. (Two masts wouldn't do, because the sphere can come in from the side, between them, which the code gets right and a flat drawing gets wrong.) A third test takes each cell the code says is touched and checks that a clean sphere really does touch it, with nothing poking inside.</p>
+
+  <h2>Sending the lightning down</h2>
+  <p>The sphere says what can be struck, not how often. For that Rodwise runs the electrogeometric model behind the sphere. Each simulated leader picks a peak current from the distribution above, which gives its striking distance <code>r</code>. It comes down at a random point and strikes the cell with the greatest <code>h + √(r² − d²)</code>, or the ground if nothing beats <code>r</code>.</p>
+  <p>Each leader is placed uniformly over the building's extent widened by its own <code>r</code>, and weighted by that area. That makes the average an unbiased estimate of each part's collection area, and multiplied by the ground flash density it gives strikes per year. A test compares the simulation with the exact integral for a lone mast, which is <code>π(2rh − h²)</code> averaged over the currents. The two agree to within 2%.</p>
+  <figure class="figure chart-box">
+    <figcaption>Collection area of a lone 20 × 10 m building, by height: the electrogeometric model against the IEC 62305-2 formula L·W + 6H(L+W) + 9πH²</figcaption>
+    <svg class="chart" id="c-area" viewBox="0 0 640 280" role="img" aria-label="Collection area against building height"></svg>
+    <div class="legend"><span><i class="swatch rod"></i>Electrogeometric model (Rodwise)</span><span><i class="swatch cover"></i>IEC 62305-2 (3H rule)</span></div>
+  </figure>
+  <p>The two methods agree in shape but not in size. The standard's 3H rule is a simple rule for risk assessment. The electrogeometric model, with this current distribution, gives a lone building a wider reach. Rodwise shows both and uses the model for its strike counts. To turn collection areas into strikes, it needs the ground flash density. For Australia that can be estimated from thunder days as <code>Ng = 0.012 Td^1.4</code> (Kuleshov and others). The Bureau of Meteorology publishes thunder-day maps.</p>
+
+  <h2>Choosing the air terminals</h2>
+  <p>A rod only ever adds something to roll over, so it can raise the sphere but never lower it. A cell that one rod protects stays protected whatever else is added. Rodwise uses that in three ways.</p>
+  <ul>
+    <li><strong>A cheap greedy pass.</strong> Each round adds the rod that protects the most still-exposed cells per dollar, and only re-checks cells that were exposed. If even protecting every exposed cell couldn't beat the best rod found so far, a candidate is skipped without being evaluated.</li>
+    <li><strong>A clean-up.</strong> Next, every rod the others make unnecessary is dropped, and each remaining rod is made shorter if a shorter one still does the job.</li>
+    <li><strong>A finer check.</strong> The search runs on a 1 m grid. The plan is then checked on the half-metre grid, topped up if a sliver is still exposed, and cleaned up again. A test plans the example house at all four levels and checks that nothing is exposed afterwards and that removing any one rod would expose something.</li>
+  </ul>
+  <p>The greedy pass doesn't promise the cheapest possible set: choosing rods to cover a roof is a set-cover problem, which is hard in general. What Rodwise does promise is that the plan protects everything and contains no rod it doesn't need.</p>
+
+  <h2>What it leaves out</h2>
+  <ul>
+    <li><strong>Simplified shapes.</strong> Buildings are boxes, gable and hip roofs, tanks, trees and poles on flat ground. Real ones have dormers, parapets and slopes.</li>
+    <li><strong>Side flashes.</strong> These are flagged, not drawn. A height field has no overhangs, so walls rising more than the sphere radius above their surroundings are reported rather than coloured.</li>
+    <li><strong>Leaders coming straight down.</strong> In the electrogeometric model the leaders descend vertically, and the ground has the same striking distance as a building. These are the textbook assumptions; real leaders wander.</li>
+    <li><strong>Air terminals only.</strong> Down conductors, earthing, bonding and surge protection are needed too, and they are where many real failures happen.</li>
+  </ul>
+  <p>Rodwise is for understanding and discussing protection, not a design. A real lightning protection system has to be designed and installed to AS/NZS 1768 or IEC 62305 by a qualified professional.</p>
+
+  <h2>Sources</h2>
+  <ul class="sources">
+    <li>IEC 62305-1:2010 and 62305-3:2010, <em>Protection against lightning</em>: protection levels, sphere radii, the minimum current each level intercepts, and the share of strikes that is.</li>
+    <li>IEC 62305-2:2010, <em>Risk management</em>: the collection area of an isolated structure.</li>
+    <li>AS/NZS 1768:2021, <em>Lightning protection</em>: the Australian and New Zealand standard, which uses the same rolling sphere method.</li>
+    <li>Kuleshov, Y. et al., climatology of lightning activity over Australia: Ng ≈ 0.012 Td^1.4.</li>
+    <li>Bureau of Meteorology, <em>Average annual thunder-day and lightning flash density</em> maps.</li>
+  </ul>
+</article>
