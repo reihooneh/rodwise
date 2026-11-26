@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege: jobs can read the code and nothing else unless they say so.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install the C toolchain, the pinned packages and the test browser
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang lld clang-tidy
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: C core under AddressSanitizer and UBSan (geometry worked out by hand, exact integrals, the planner's promises, hostile input)
+        run: make test-core
+      - name: C lint (strict warnings and clang-tidy)
+        run: make lint
+      - name: Build the WebAssembly and the site
+        run: npm run build
+      - name: WebAssembly interface and browser tests at phone, tablet and desktop sizes
+        run: npm test
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the WebAssembly and the site
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang lld
+          npm ci
+          npm run build
+      - uses: actions/configure-pages@v5
+      - name: Publish only the built site folder
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
