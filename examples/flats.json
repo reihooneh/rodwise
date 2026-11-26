@@ -1,0 +1,64 @@
+{
+ "name": "Apartment block",
+ "about": "Eight storeys of flats with a lift overrun, rooftop air-conditioning units and a mobile phone mast.",
+ "elements": [
+  {
+   "type": "box",
+   "kind": "building",
+   "name": "Apartments",
+   "x": 0,
+   "y": 0,
+   "w": 26,
+   "d": 16,
+   "h": 27
+  },
+  {
+   "type": "box",
+   "kind": "building",
+   "name": "Lift overrun",
+   "x": 11,
+   "y": 6,
+   "w": 4,
+   "d": 4,
+   "h": 30
+  },
+  {
+   "type": "box",
+   "kind": "fitting",
+   "name": "Air-conditioning units",
+   "x": 3,
+   "y": 2,
+   "w": 5,
+   "d": 2,
+   "h": 28.4
+  },
+  {
+   "type": "box",
+   "kind": "fitting",
+   "name": "Air-conditioning units",
+   "x": 18,
+   "y": 11,
+   "w": 5,
+   "d": 2,
+   "h": 28.4
+  },
+  {
+   "type": "pole",
+   "kind": "fitting",
+   "name": "Phone mast",
+   "x": 23,
+   "y": 3,
+   "h": 33
+  },
+  {
+   "type": "box",
+   "kind": "building",
+   "name": "Podium",
+   "x": -6,
+   "y": -6,
+   "w": 38,
+   "d": 6,
+   "h": 4.5
+  }
+ ]
+}

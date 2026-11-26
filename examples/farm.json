@@ -1,0 +1,56 @@
+{
+ "name": "Farmhouse and a gum tree",
+ "about": "A single-storey farmhouse and machinery shed, a windmill, and a 24 m river red gum beside the house.",
+ "elements": [
+  {
+   "type": "hip",
+   "kind": "building",
+   "name": "Farmhouse",
+   "x": 0,
+   "y": 0,
+   "w": 18,
+   "d": 11,
+   "eave": 3.2,
+   "ridge": 6
+  },
+  {
+   "type": "gable",
+   "kind": "building",
+   "name": "Machinery shed",
+   "x": 30,
+   "y": -4,
+   "w": 14,
+   "d": 9,
+   "eave": 4.5,
+   "ridge": 6.2,
+   "ridgeRuns": "east-west"
+  },
+  {
+   "type": "pole",
+   "kind": "fitting",
+   "name": "Windmill",
+   "x": 24,
+   "y": 16,
+   "h": 12
+  },
+  {
+   "type": "tank",
+   "kind": "fitting",
+   "name": "Water tank",
+   "x": 21,
+   "y": 3,
+   "r": 2,
+   "h": 3
+  },
+  {
+   "type": "tree",
+   "kind": "tree",
+   "name": "River red gum",
+   "x": -9,
+   "y": 15,
+   "r": 8,
+   "base": 6,
+   "top": 24
+  }
+ ]
+}

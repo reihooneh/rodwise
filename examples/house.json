@@ -1,0 +1,76 @@
+{
+ "name": "Two-storey house",
+ "about": "A brick house with a garage, a chimney, a TV antenna on the ridge and a rainwater tank. Lower trees in the garden.",
+ "elements": [
+  {
+   "type": "gable",
+   "kind": "building",
+   "name": "House",
+   "x": 0,
+   "y": 0,
+   "w": 14,
+   "d": 9,
+   "eave": 6,
+   "ridge": 8.5,
+   "ridgeRuns": "east-west"
+  },
+  {
+   "type": "hip",
+   "kind": "building",
+   "name": "Garage",
+   "x": 14,
+   "y": 0,
+   "w": 6,
+   "d": 7,
+   "eave": 3,
+   "ridge": 4.5
+  },
+  {
+   "type": "box",
+   "kind": "building",
+   "name": "Chimney",
+   "x": 3,
+   "y": 6.5,
+   "w": 0.8,
+   "d": 0.8,
+   "h": 9.4
+  },
+  {
+   "type": "pole",
+   "kind": "fitting",
+   "name": "TV antenna",
+   "x": 10,
+   "y": 4.5,
+   "h": 11
+  },
+  {
+   "type": "tank",
+   "kind": "fitting",
+   "name": "Rainwater tank",
+   "x": 21.5,
+   "y": 8.5,
+   "r": 1.2,
+   "h": 2.2
+  },
+  {
+   "type": "tree",
+   "kind": "tree",
+   "name": "Jacaranda",
+   "x": -6,
+   "y": 13,
+   "r": 3.5,
+   "base": 2.5,
+   "top": 7.5
+  },
+  {
+   "type": "tree",
+   "kind": "tree",
+   "name": "Lemon tree",
+   "x": 24,
+   "y": -5,
+   "r": 1.8,
+   "base": 0.8,
+   "top": 3.5
+  }
+ ]
+}

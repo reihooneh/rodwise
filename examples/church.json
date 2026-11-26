@@ -1,0 +1,59 @@
+{
+ "name": "Church with a steeple",
+ "about": "A sandstone church: a tall nave, a square tower with a pyramid spire and a cross, and a hall beside it.",
+ "elements": [
+  {
+   "type": "gable",
+   "kind": "building",
+   "name": "Nave",
+   "x": 0,
+   "y": 0,
+   "w": 26,
+   "d": 12,
+   "eave": 9,
+   "ridge": 15,
+   "ridgeRuns": "east-west"
+  },
+  {
+   "type": "box",
+   "kind": "building",
+   "name": "Tower",
+   "x": -6,
+   "y": 3,
+   "w": 6,
+   "d": 6,
+   "h": 19
+  },
+  {
+   "type": "hip",
+   "kind": "building",
+   "name": "Spire",
+   "x": -6,
+   "y": 3,
+   "w": 6,
+   "d": 6,
+   "eave": 19,
+   "ridge": 29
+  },
+  {
+   "type": "pole",
+   "kind": "fitting",
+   "name": "Cross",
+   "x": -3,
+   "y": 6,
+   "h": 31
+  },
+  {
+   "type": "gable",
+   "kind": "building",
+   "name": "Hall",
+   "x": 4,
+   "y": 16,
+   "w": 18,
+   "d": 10,
+   "eave": 4,
+   "ridge": 6.5,
+   "ridgeRuns": "east-west"
+  }
+ ]
+}
