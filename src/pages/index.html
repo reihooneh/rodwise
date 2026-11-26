@@ -1,0 +1,70 @@
+<!--{"title": "Rodwise: where lightning would strike, and how to stop it", "description": "See where lightning would strike a building, with the rolling sphere of AS/NZS 1768 and IEC 62305 and thousands of simulated strikes, then plan the cheapest air terminals to protect it.", "nav": "index", "script": "home.js"}-->
+<section class="wrap hero">
+  <div>
+    <p class="kicker">Lightning protection, worked out in your browser</p>
+    <h1>Where would lightning <em>strike</em> your building?</h1>
+    <p class="lede">Engineers answer that by rolling an imaginary sphere, 20 to 60 metres across depending on how well protected a building must be, over everything on the site. Anything it touches can be struck. Rodwise does that exactly, sends thousands of simulated lightning leaders down to see where they really land, then finds the fewest, cheapest lightning rods that leave nothing for the sphere to touch.</p>
+    <div class="buttons">
+      <a class="button primary" href="check.html">Check a building</a>
+      <a class="button" href="method.html">How it works</a>
+    </div>
+  </div>
+  <div>
+    <div class="stage" id="stage">
+      <div class="stage-fallback" id="fallback" hidden>3D needs WebGL, which this browser has turned off. The numbers and the plan view on the other pages still work.</div>
+      <div class="badge" id="badge" hidden></div>
+    </div>
+    <div class="stage-tools">
+      <button type="button" id="play" aria-pressed="true">Pause</button>
+      <button type="button" id="sphere" aria-pressed="false">Roll the sphere</button>
+      <span class="spacer"></span>
+      <span class="legend">
+        <span><i class="swatch hit"></i>Can be struck</span>
+        <span><i class="swatch cover"></i>Under the sphere</span>
+        <span><i class="swatch strike"></i>Strike</span>
+      </span>
+    </div>
+    <p class="stage-caption">A two-storey house at protection level III (a 45 m sphere). Drag to turn it.</p>
+  </div>
+</section>
+
+<section class="wrap section">
+  <h2>The example house, worked out</h2>
+  <p class="muted">With about 25 thunder days a year, typical of Sydney. Rodwise works these out live when the page loads.</p>
+  <div class="tiles" id="tiles" aria-live="polite">
+    <div class="tile"><div class="num" id="t-strikes">…</div><div class="what">strikes to the house and its fittings per century</div></div>
+    <div class="tile"><div class="num hot" id="t-antenna">…</div><div class="what">of those land on the TV antenna</div></div>
+    <div class="tile"><div class="num" id="t-exposed">…</div><div class="what">of the roof the sphere can still touch</div></div>
+    <div class="tile"><div class="num cool" id="t-plan">…</div><div class="what">to protect all of it with air terminals</div></div>
+  </div>
+</section>
+
+<section class="wrap section">
+  <h2>How it works</h2>
+  <div class="grid-3">
+    <div class="card">
+      <span class="step-num">1</span>
+      <h3>Roll the sphere</h3>
+      <p>The building becomes a grid of heights. Rolling a sphere over it is a grey-scale morphological closing with a ball, so Rodwise can say, for every half-metre of roof, whether the sphere can touch it.</p>
+    </div>
+    <div class="card">
+      <span class="step-num">2</span>
+      <h3>Send the lightning down</h3>
+      <p>Each simulated leader has a peak current drawn from the standard's statistics and strikes the first thing within its striking distance, 10 I<sup>0.65</sup> metres. Sixty thousand of them show how often each part would be hit.</p>
+    </div>
+    <div class="card">
+      <span class="step-num">3</span>
+      <h3>Place the rods</h3>
+      <p>A rod can only ever protect more, never less, so Rodwise adds the one that covers the most exposed roof per dollar, drops any the others make unnecessary, shortens what it can, and checks the result on a finer grid.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section">
+  <h2>Try another building</h2>
+  <div class="grid-3" id="examples">
+    <a class="card" href="check.html?example=farm"><h3>Farmhouse and a gum tree</h3><p class="muted">A 24 m river red gum takes most of the strikes. But a tree that tall beside a house is a risk of its own.</p></a>
+    <a class="card" href="check.html?example=church"><h3>Church with a steeple</h3><p class="muted">The cross at the top of the spire draws strikes from all around. Does the nave below it need protecting too?</p></a>
+    <a class="card" href="check.html?example=flats"><h3>Apartment block</h3><p class="muted">Eight storeys: tall enough that, at the strictest level, the sphere can touch the walls as well as the roof.</p></a>
+  </div>
+</section>
